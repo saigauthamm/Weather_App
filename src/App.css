@@ -1,38 +1,72 @@
-.App {
+
+.weather-app-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 24px;
+  background-color: #f5f7fa;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+  font-family: 'Inter', sans-serif;
+  color: #2c3e50;
+}
+
+.weather-app-title {
+  font-size: 2rem;
+  font-weight: 700;
   text-align: center;
+  margin-bottom: 24px;
+  color: #2a3f66;
+}
+.input-date-wrapper {
+  margin-bottom: 24px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.date-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.date-selector-label {
+  font-weight: 600;
+  color: #34495e;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.date-buttons {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.date-button {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 10px 14px;
+  min-width: 72px;
+  background-color: #ffffff;
+  border: 1px solid #ccd0d7;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+  text-align: center;
 }
 
-.App-link {
-  color: #61dafb;
+.date-button:hover {
+  background-color: #eef2f7;
+  transform: translateY(-2px);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.date-button.selected {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+.date-button .today-label {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #22140c;
 }
