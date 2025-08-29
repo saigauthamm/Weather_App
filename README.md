@@ -26,7 +26,7 @@ Installation
 Clone the repository:
 
 bash
-git clone [Your GitHub Repository URL]
+git clone https://github.com/saigauthamm/Weather_App.git
 Navigate into the project directory:
 
 bash
