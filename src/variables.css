@@ -1,0 +1,19 @@
+:root {
+  --color-bg: #e0f2f1;
+  --color-surface: #ffffff;
+  --color-primary: #00796b;
+  --color-primary-hover: #004d40;
+  --color-text-primary: #263238;
+  --color-text-secondary: #546e7a;
+  --color-border: #b2dfdb;
+  --shadow-light: 0 6px 18px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 12px 36px rgba(0, 0, 0, 0.12);
+
+  --font-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  --radius: 12px;
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+}

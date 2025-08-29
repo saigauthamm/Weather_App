@@ -12,10 +12,20 @@ function getWeatherDescription(code) {
   if ([95, 96, 99].includes(code)) return 'Thunderstorm';
   return 'Unknown';
 }
+function getWeatherIcon(code) {
+  if (code === 0) return "☀️";
+  if ([1, 2, 3].includes(code)) return "⛅";
+  if ([45, 48].includes(code)) return "🌫️";
+  if ([51, 53, 55].includes(code)) return "🌦️";
+  if ([61, 63, 65].includes(code)) return "🌧️";
+  if ([71, 73, 75].includes(code)) return "❄️";
+  if ([80, 81, 82].includes(code)) return "🌦️";
+  if ([95, 96, 99].includes(code)) return "⛈️";
+  return "🌈";
+}
 
 export default function ForecastDisplay({ forecast, onDayClick }) {
   if (!forecast) return null;
-
   const { time, temperature_2m_max, temperature_2m_min, weathercode } = forecast;
 
   return (
@@ -28,24 +38,20 @@ export default function ForecastDisplay({ forecast, onDayClick }) {
             className="forecast-card"
             onClick={() => onDayClick(idx)}
           >
-            <p className="forecast-date">
-              <strong>
-                {new Date(date).toLocaleDateString(undefined, {
-                  weekday: 'short',
-                  month: 'short',
-                  day: 'numeric'
-                })}
-              </strong>
-            </p>
-            <p className="forecast-temp">
+            <div className="forecast-date">
+              {new Date(date).toLocaleDateString(undefined, {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+              })}
+            </div>
+            <div style={{ fontSize: "1.4rem" }}>{getWeatherIcon(weathercode[idx])}</div>
+            <div className="forecast-temp">
               Max: {temperature_2m_max[idx]}°C
-            </p>
-            <p className="forecast-temp">
+              <br />
               Min: {temperature_2m_min[idx]}°C
-            </p>
-            <p className="forecast-condition">
-              {getWeatherDescription(weathercode[idx])}
-            </p>
+            </div>
+            <div className="forecast-condition">{getWeatherDescription(weathercode[idx])}</div>
           </div>
         ))}
       </div>

@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import CityInput from './CityInput';
 import WeatherDisplay from './WeatherDisplay';
 import ErrorMessage from './ErrorMessage';
 import ForecastDisplay from './ForecastDisplay';
+import { WiDaySunny } from 'react-icons/wi';
 import './App.css';
 
-function getNextSixDates() {
+const getNextSixDates = () => {
   const dates = [];
   const today = new Date();
   for (let i = 0; i < 6; i++) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
-    dates.push(date);
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    dates.push(d);
   }
   return dates;
-}
+};
 
 export default function WeatherApp() {
   const [city, setCity] = useState('');
@@ -24,14 +25,13 @@ export default function WeatherApp() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const dates = getNextSixDates();
+  const dates = useMemo(() => getNextSixDates(), []);
 
   const fetchWeather = async (date = selectedDate) => {
     setError('');
     setWeather(null);
     setForecast(null);
     setSelectedDay(null);
-
     if (!city.trim()) {
       setError('Please enter a city name');
       return;
@@ -42,12 +42,13 @@ export default function WeatherApp() {
         `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`
       );
       const geoData = await geoRes.json();
+
       if (!geoData.results?.length) {
         setError('City not found');
         return;
       }
-      const { latitude, longitude } = geoData.results[0];
 
+      const { latitude, longitude } = geoData.results[0];
       const startDate = date.toISOString().split('T')[0];
       const endDateObj = new Date(date);
       endDateObj.setDate(endDateObj.getDate() + 5);
@@ -55,12 +56,11 @@ export default function WeatherApp() {
 
       const weatherRes = await fetch(
         `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
-        `&current_weather=true` +
-        `&daily=temperature_2m_max,temperature_2m_min,weathercode,windspeed_10m_max,winddirection_10m_dominant` +
-        `&start_date=${startDate}&end_date=${endDate}` +
-        `&timezone=auto`
+        `&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode,windspeed_10m_max,winddirection_10m_dominant` +
+        `&start_date=${startDate}&end_date=${endDate}&timezone=auto`
       );
       const weatherData = await weatherRes.json();
+
       if (!weatherData.daily) {
         setError('Weather data not available');
         return;
@@ -68,19 +68,17 @@ export default function WeatherApp() {
 
       setWeather(weatherData.current_weather);
       setForecast(weatherData.daily);
-
-      // Show details for the selected date at index 0
-      const idx = 0;
       setSelectedDay({
-        date: weatherData.daily.time[idx],
-        tempMax: weatherData.daily.temperature_2m_max[idx],
-        tempMin: weatherData.daily.temperature_2m_min[idx],
-        weathercode: weatherData.daily.weathercode[idx],
-        windSpeed: weatherData.daily.windspeed_10m_max[idx],
-        windDirection: weatherData.daily.winddirection_10m_dominant[idx],
+        date: weatherData.daily.time[0],
+        tempMax: weatherData.daily.temperature_2m_max[0],
+        tempMin: weatherData.daily.temperature_2m_min[0],
+        weathercode: weatherData.daily.weathercode[0],
+        windSpeed: weatherData.daily.windspeed_10m_max[0],
+        windDirection: weatherData.daily.winddirection_10m_dominant[0],
       });
-    } catch {
+    } catch (err) {
       setError('Failed to fetch data');
+      console.error(err);
     }
   };
 
@@ -104,13 +102,15 @@ export default function WeatherApp() {
 
   return (
     <div className="weather-app-container">
-      <h2 className="weather-app-title">Weather Now</h2>
+      <header className="app-header">
+      <WiDaySunny size={58} color="#0b0f0fff" className="header-icon" />
+      <h1 className="app-title">Weather Now</h1>
+    </header>
 
       <div className="input-date-wrapper">
         <CityInput city={city} setCity={setCity} onFetch={() => fetchWeather()} />
-
         <div className="date-selector">
-          <span className="date-selector-label">Select Date:</span>
+          <span className="date-selector-label"></span>
           <div className="date-buttons">
             {dates.map((date) => {
               const isSelected = date.toDateString() === selectedDate.toDateString();
@@ -118,7 +118,7 @@ export default function WeatherApp() {
               return (
                 <button
                   key={date.toISOString()}
-                  className={`date-button${isSelected ? ' selected' : ''}`}
+                  className={`date-button${isSelected ? ' selected pulse' : ''}`}
                   onClick={() => handleDateClick(date)}
                 >
                   <div>{date.toLocaleDateString(undefined, { weekday: 'short' })}</div>
@@ -134,10 +134,10 @@ export default function WeatherApp() {
       {error && <ErrorMessage message={error} />}
 
       {selectedDay
-        ? <WeatherDisplay detailedDay={selectedDay} />
-        : weather && <WeatherDisplay weather={weather} />}
+        ? <WeatherDisplay className="animate-fade-in-up" detailedDay={selectedDay} />
+        : weather && <WeatherDisplay className="animate-fade-in-up" weather={weather} />}
 
-      {forecast && <ForecastDisplay forecast={forecast} onDayClick={handleDayClick} />}
+      {forecast && <ForecastDisplay className="animate-slide-in-up" forecast={forecast} onDayClick={handleDayClick} />}
     </div>
   );
 }

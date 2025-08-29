@@ -6,13 +6,14 @@ export default function CityInput({ city, setCity, onFetch }) {
     <div className="city-input-container">
       <input
         type="text"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-        placeholder="Enter a city name"
         className="city-input-field"
+        value={city}
+        onChange={e => setCity(e.target.value)}
+        placeholder="Enter a city name"
+        aria-label="City name"
       />
-      <button onClick={onFetch} className="city-input-button">
-        Get Weather
+      <button className="city-input-button" onClick={onFetch}>
+        Get weather
       </button>
     </div>
   );
